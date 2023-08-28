@@ -53,7 +53,7 @@ export default function BreedScreen({route, navigation}) {
                         marginTop: 10,
                     }}
                 />
-            <Text style={{ textAlign: 'center', color: 'black', fontSize: 24, width: '50%', margin: 10, borderRadius: 20, borderWidth: 0}}>My Images :3</Text>
+            <Text style={{ textAlign: 'center', color: 'black', fontSize: 24, width: '50%', margin: 20}}>My Images</Text>
             <ScrollView contentContainerStyle={{paddingBottom: 550 ,alignItems: 'center' }}>
                 {breedData.map((item) => (
                     <View key={item.id} style={{ marginBottom: 10 }}>
