@@ -4,7 +4,7 @@ import {API} from '@env';
 
 const DeviceWidth = Dimensions.get('window').width;
 
-export default function BreedScreen({route}) {
+export default function BreedScreen({route, navigation}) {
     const [breedData, setBreedData] = React.useState(null);
 
     React.useEffect(() => {
@@ -57,10 +57,16 @@ export default function BreedScreen({route}) {
             <ScrollView contentContainerStyle={{paddingBottom: 550 ,alignItems: 'center' }}>
                 {breedData.map((item) => (
                     <View key={item.id} style={{ marginBottom: 10 }}>
+                    <Pressable onPress={() => navigation.navigate("Image Info", {
+                        id: item.id,
+                        url: item.url,
+                        })}
+                        >
                     <Image
                         style={{ width: DeviceWidth * 0.8, height: DeviceWidth * 0.8, borderRadius: 20 }}
                         source={{ uri: item.url }}
                     />
+                    </Pressable>
                     </View>
                 ))}
             </ScrollView>

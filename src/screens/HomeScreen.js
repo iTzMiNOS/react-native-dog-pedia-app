@@ -7,6 +7,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 export default function HomeScreen({navigation}) {
     const [dogs, setDogs] = React.useState([]);
+    const [gifs, setGifs] = React.useState([]);
     const [breeds, setBreeds] = React.useState([]);
     const [refresh, setRefresh] = React.useState(true);
     const [value, setValue] = React.useState(null);
@@ -36,6 +37,17 @@ export default function HomeScreen({navigation}) {
     },[refresh]);
 
     React.useEffect(() => {
+      fetch(`https://api.thedogapi.com/v1/images/search?limit=25&mime_types=gif&api_key=${API}`)
+          .then((res) => res.json())
+          .then(data => {
+            setGifs(data);
+          })
+          .catch((error) => {
+              console.error('Error fetching data: ', error);
+          }); 
+    },[refresh]);
+
+    React.useEffect(() => {
       fetch(`https://api.thedogapi.com/v1/breeds`)
           .then((res) => res.json())
           .then(data => {
@@ -59,7 +71,7 @@ export default function HomeScreen({navigation}) {
     
     return (
       <View>
-        <Text style={styles.title}>Welcome to DogPedia :3</Text>
+        <Text style={styles.title}>Welcome to DogoPedia ♥</Text>
         <View
             style={{
                 borderBottomColor: 'black',
@@ -97,21 +109,6 @@ export default function HomeScreen({navigation}) {
         </View>
         }
         </View>
-        <Pressable style={({ pressed }) => [
-                  { opacity: pressed ? 0.7 : 1 }, 
-                  {borderRadius:30,
-                    shadowColor: '#000',
-                    backgroundColor: 'purple',
-                    margin: 10,
-                    padding: 10,
-                    width: '40%',
-                    alignSelf: 'center',
-                    shadowOffset: { width: 0, height: 2 },
-                    shadowOpacity: 0.5,
-                    shadowRadius: 2,
-                    elevation: 5,}]} onPress={toggleRef}>
-          <Text style={{textAlign: 'center' ,color: 'white', fontSize: 24}}>Refresh</Text>
-        </Pressable>
         <View
             style={{
                 borderBottomColor: 'black',
@@ -179,6 +176,59 @@ export default function HomeScreen({navigation}) {
                 marginBottom: 10,
             }}
         />
+        <View  style={{justifyContent: 'center'}}>
+        {gifs ?
+        <ScrollView style={styles.scrollView} horizontal={true}>
+            {gifs.map((item) => (
+              <Pressable key={item.id} onPress={() => navigation.navigate("Gif Info", {
+                id: item.id,
+                url: item.url,
+                })}
+                >
+                <Image
+                source={{uri: item.url}}
+                style={{
+                  width: 80,
+                  height: 80,
+                  marginHorizontal: 10,
+                  marginVertical: 10,
+                  borderWidth: 1,
+                  borderRadius: 25,
+                  borderColor: 'gray'
+                }}
+                />
+              </Pressable>
+            ))
+            }
+        </ScrollView>
+        :<View>
+        <ActivityIndicator size={'large'} color={'blue'} />
+        </View>
+        }
+        <View
+            style={{
+                borderBottomColor: 'black',
+                borderBottomWidth: StyleSheet.hairlineWidth,
+                marginTop: 10,
+                marginBottom: 10,
+            }}
+        />
+        <Pressable style={({ pressed }) => [
+                  { opacity: pressed ? 0.7 : 1 }, 
+                  {borderRadius:30,
+                    shadowColor: '#000',
+                    backgroundColor: 'purple',
+                    margin: 10,
+                    padding: 10,
+                    width: '40%',
+                    alignSelf: 'center',
+                    shadowOffset: { width: 0, height: 2 },
+                    shadowOpacity: 0.5,
+                    shadowRadius: 2,
+                    elevation: 5,}]} onPress={toggleRef}>
+          <Text style={{textAlign: 'center' ,color: 'white', fontSize: 24}}>Refresh</Text>
+        </Pressable>
+        </View>
       </View>
     );
   }
